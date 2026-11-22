@@ -59,7 +59,7 @@ button { cursor: pointer; }
 .brand { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
 .brand h1 { font-size: 22px; }
 .brand .sync { font-size: 12px; color: var(--muted); }
-.tabs { display: grid; grid-template-columns: repeat(6, 1fr); gap: 3px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px; }
+.tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px; }
 .tab { border: 0; background: transparent; padding: 9px 0; border-radius: 9px; color: var(--muted); font-weight: 500; font-size: 13px; min-width: 0; }
 .tab[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); }
 
@@ -202,9 +202,7 @@ select.input { appearance: auto; }
   <section id="v-bugun"></section>
   <section id="v-hafta" hidden></section>
   <section id="v-intizom" hidden></section>
-  <section id="v-bloknot" hidden></section>
   <section id="v-pul" hidden></section>
-  <section id="v-zaxira" hidden></section>
 </div>
 <div class="toast" role="status" aria-live="polite" id="toast"></div>
 
@@ -230,7 +228,7 @@ select.input { appearance: auto; }
   ];
   var WEEKDAYS = ["Yakshanba", "Dushanba", "Seshanba", "Chorshanba", "Payshanba", "Juma", "Shanba"];
   var MONTHS = ["yanvar", "fevral", "mart", "aprel", "may", "iyun", "iyul", "avgust", "sentabr", "oktabr", "noyabr", "dekabr"];
-  var TABS = [["bugun", "Bugun"], ["hafta", "Hafta"], ["intizom", "Intizom"], ["bloknot", "Bloknot"], ["pul", "Pul"], ["zaxira", "Zaxira"]];
+  var TABS = [["bugun", "Bugun"], ["hafta", "Hafta"], ["intizom", "Intizom"], ["pul", "Pul"]];
 
   /* ===== helpers ===== */
   function el(tag, props) {
@@ -841,13 +839,12 @@ select.input { appearance: auto; }
   /* ===== render ===== */
   function renderAll() {
     renderTabs();
-    ["bugun", "hafta", "intizom", "bloknot", "pul", "zaxira"].forEach(function (v) { document.getElementById("v-" + v).hidden = v !== view; });
+    ["bugun", "hafta", "intizom", "pul"].forEach(function (v) { document.getElementById("v-" + v).hidden = v !== view; });
     if (view === "bugun") renderBugun();
     else if (view === "hafta") renderHafta();
     else if (view === "intizom") renderIntizom();
-    else if (view === "bloknot") renderBloknot();
     else if (view === "pul") renderPul();
-    else renderZaxira();
+    else renderPul();
   }
 
   /* ===== init ===== */
