@@ -1,0 +1,42 @@
+INTIZOM DAFTARI: telefonga o'rnatish
+
+Bu ilova Claude'siz, internetsiz ishlaydi. Ma'lumotlar telefonning o'zida saqlanadi.
+
+1) Internetga joylash (bir marta, bepul, 5 daqiqa)
+   - github.com da bepul hisob oching va kiring.
+   - Yuqoridagi "+" -> "New repository". Nomi: intizom-daftari. "Public" tanlang -> "Create repository".
+   - "uploading an existing file" havolasini bosing va shu papkadagi HAMMA fayllarni
+     (index.html, manifest.json, sw.js, uchta icon-*.png) sudrab tashlang -> "Commit changes".
+   - Settings -> Pages -> "Branch: main" va "/ (root)" -> Save.
+   - 1-2 daqiqadan keyin havola chiqadi:
+     https://SIZNING-NOMINGIZ.github.io/intizom-daftari/
+
+2) Telefonga ilova qilib o'rnatish (APK shart emas)
+   - Telefondagi Chrome'da shu havolani oching.
+   - Menyu (uch nuqta) -> "Ilovani o'rnatish" yoki "Bosh ekranga qo'shish".
+   - Bosh ekranda "Intizom" belgisi paydo bo'ladi. U to'liq ekranda, ilova kabi ochiladi
+     va internetsiz ham ishlaydi.
+
+3) Haqiqiy APK fayl kerak bo'lsa
+   - pwabuilder.com saytiga kiring, yuqoridagi havolani kiriting -> "Start".
+   - "Package for stores" -> Android -> "Generate". "Test package" ichidan APK yuklab olinadi.
+   - APK ni telefonga o'tkazib, o'rnating ("Noma'lum manbalardan o'rnatish"ga ruxsat bering).
+
+4) Eski daftardan ma'lumotlarni olib o'tish
+   - Claude ichidagi eski daftarda Zaxira -> "Hammasi (.json)" ni yuklab oling.
+   - Yangi ilovada Zaxira -> "Zaxiradan tiklash" -> shu faylni tanlang.
+   - Rasm va videolar o'tmaydi, matnlar, reja va intizom belgilari o'tadi.
+
+5) Zaxira
+   - Telefonni almashtirishdan oldin Zaxira -> "Ulashish" -> Google Drive'ni tanlang.
+   - Yangi telefonda ilovani o'rnatib, "Zaxiradan tiklash" bilan faylni tanlang.
+   - Brauzer ma'lumotlarini tozalash yoki ilovani o'chirish hamma narsani o'chiradi.
+
+6) Yangi versiyani o'rnatish (agar ilovani avval joylagan bo'lsangiz)
+   - GitHub'da intizom-daftari repository'ga kiring -> "Add file" -> "Upload files".
+   - Yangi arxivdagi fayllarni (kamida index.html va sw.js) tashlang -> "Commit changes".
+   - 1-2 daqiqadan keyin telefondagi ilovani yopib qayta oching. Ma'lumotlaringiz o'chmaydi.
+
+7) Pul bo'limi
+   - "Pul" tabidagi "Hisoblar" bo'limida hisoblar nomini o'zgartiring va boshlang'ich qoldiqni yozing.
+   - Har kuni "Kirim" (topdim), "Chiqim" (sarfladim) yoki "O'tkazma" (kartadan naqdga) yozing.
