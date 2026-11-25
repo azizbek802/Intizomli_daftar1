@@ -276,7 +276,7 @@ select.input { appearance: auto; }
     var box = document.getElementById("toast");
     box.replaceChildren(el("div", { class: isErr ? "err" : "", text: msg }));
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { box.replaceChildren(); }, isErr ? 6000 : 2600);
+    toastTimer = setTimeout(function () { box.replaceChildren(); }, isErr ? 6000 : 4500);
   }
 
   /* ===== state ===== */
@@ -619,7 +619,7 @@ select.input { appearance: auto; }
     return b;
   }
   function accSelect(id, value, onchange) {
-    var sel = el("select", { class: "input", id: id, onchange: onchange }, money.accounts.map(function (a) { return el("option", { value: a.id, text: a.name }); }));
+    var sel = el("select", { class: "input", id: id, onchange: onchange }, money.accounts.map(function (a) { return el("option", { value: a.id, text: a.name + ": " + fmtMoney(accBalance(a.id)) }); }));
     sel.value = value; return sel;
   }
   function bindMoney(input, setter) {
@@ -636,7 +636,10 @@ select.input { appearance: auto; }
     if (form.type === "move") t.to = form.to;
     money.tx.push(t); saveStore();
     form.amount = ""; form.note = "";
-    toast("Yozildi: " + fmtMoney(amt)); renderAll();
+    var left = form.type === "move"
+      ? accName(t.acc) + ": qoldi " + fmtMoney(accBalance(t.acc)) + ". " + accName(t.to) + ": qoldi " + fmtMoney(accBalance(t.to))
+      : accName(t.acc) + ": qoldi " + fmtMoney(accBalance(t.acc));
+    toast("Yozildi. " + left); renderAll();
   }
   function renderPul() {
     var root = document.getElementById("v-pul");
@@ -734,12 +737,12 @@ select.input { appearance: auto; }
       var openIn = el("input", { class: "field", type: "text", inputMode: "numeric", value: a.open ? group(a.open) : "", placeholder: "0", "aria-label": a.name + " boshlang'ich qoldiq" });
       openIn.addEventListener("input", function () { var d = digits(openIn.value); openIn.value = d ? group(parseInt(d, 10)) : ""; });
       openIn.addEventListener("change", function () { a.open = parseInt(digits(openIn.value) || "0", 10); saveStore(); renderAll(); });
-      return el("div", { class: "accedit" }, nameIn, openIn,
+      return el("div", { class: "accwrap" }, el("div", { class: "accedit" }, nameIn, openIn,
         el("button", { class: "x", "aria-label": "Hisobni o'chirish", text: "×", onclick: function () {
           if (money.accounts.length <= 1) { toast("Kamida bitta hisob qolishi kerak", true); return; }
           if (money.tx.some(function (t) { return t.acc === a.id || t.to === a.id; })) { toast("Bu hisobda yozuvlar bor, o'chirib bo'lmaydi. Nomini o'zgartirishingiz mumkin.", true); return; }
           money.accounts = money.accounts.filter(function (x) { return x.id !== a.id; }); saveStore(); renderAll();
-        } }));
+        } })), el("div", { class: "small muted", style: "padding: 0 2px 8px;", text: "Hozir qoldi: " + fmtMoney(accBalance(a.id)) }));
     }));
     var addAccIn = el("input", { class: "input", id: "new-acc", type: "text", placeholder: "Yangi hisob nomi", value: newAccName, "aria-label": "Yangi hisob nomi" });
     addAccIn.addEventListener("input", function () { newAccName = addAccIn.value; });
@@ -750,7 +753,7 @@ select.input { appearance: auto; }
     addAccIn.addEventListener("keydown", function (e) { if (e.key === "Enter") addAcc(); });
     var accCard = el("div", { class: "card" },
       el("h2", { text: "Hisoblar" }),
-      el("p", { class: "muted small", text: "Pulingizni bir nechta hisobga bo'ling: nomini o'zgartiring, o'ng tomonga daftarni boshlagan paytdagi qoldiqni yozing. Bu faqat boshlang'ich summa, keyingi kirim va chiqimlar alohida yoziladi." }),
+      el("p", { class: "muted small", text: "Nomini o'zgartiring. O'ng tomondagi summa faqat boshlang'ich qoldiq: kirim va chiqim yozsangiz u o'zgarmaydi. Hozirgi qoldiq har hisobning tagida \"Hozir qoldi\" deb ko'rinadi." }),
       accEdit,
       el("div", { class: "addrow", style: "grid-template-columns: minmax(0, 1fr) auto;" }, addAccIn, el("button", { class: "btn", text: "Qo'shish", onclick: addAcc })));
 
