@@ -25,6 +25,7 @@
   --good-soft: #E2F2E9;
   --slip: #C4533A;
   --slip-soft: #F8E5DF;
+  --warn: #B7791F;
   --font-display: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
@@ -32,14 +33,14 @@
   :root:not([data-theme="light"]) {
     --bg: #0F181B; --surface: #172428; --ink: #E6EEEF; --muted: #92A6AB; --line: #28393E;
     --accent: #4FC3CD; --accent-ink: #08262A; --soft: #173238;
-    --good: #5FCB95; --good-soft: #173529; --slip: #E88A72; --slip-soft: #3A2520;
+    --good: #5FCB95; --good-soft: #173529; --slip: #E88A72; --slip-soft: #3A2520; --warn: #E5B567;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0F181B; --surface: #172428; --ink: #E6EEEF; --muted: #92A6AB; --line: #28393E;
   --accent: #4FC3CD; --accent-ink: #08262A; --soft: #173238;
-  --good: #5FCB95; --good-soft: #173529; --slip: #E88A72; --slip-soft: #3A2520;
+  --good: #5FCB95; --good-soft: #173529; --slip: #E88A72; --slip-soft: #3A2520; --warn: #E5B567;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -79,16 +80,15 @@ button { cursor: pointer; }
 .weekchips { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
 .wchip { border: 1px solid var(--line); background: var(--bg); border-radius: 10px; padding: 9px 0; font-weight: 600; font-size: 14px; }
 .wchip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
-.task.tpl { grid-template-columns: 98px minmax(0, 1fr) 32px; }
-@media (max-width: 420px) { .task.tpl { grid-template-columns: 92px minmax(0, 1fr) 28px; } }
+.task.tpl { grid-template-columns: minmax(0, 1fr) 32px; }
 .progress { height: 8px; border-radius: 99px; background: var(--soft); overflow: hidden; }
 .progress > div { height: 100%; background: var(--accent); transition: width .25s; }
 .pmeta { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); }
 
 .tasks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
-.task { display: grid; grid-template-columns: 24px 98px minmax(0, 1fr) 32px; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.task { display: grid; grid-template-columns: 24px minmax(0, 1fr) 32px; gap: 4px 8px; align-items: start; padding: 10px 0; border-bottom: 1px solid var(--line); }
 .task:last-child { border-bottom: 0; }
-.task input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--accent); margin: 0; }
+.task input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--accent); margin: 7px 0 0; }
 .field { border: 1px solid transparent; border-bottom-color: var(--line); background: transparent; border-radius: 8px; padding: 7px 8px; min-width: 0; width: 100%; }
 .field:hover, .field:focus { border-color: var(--line); background: var(--bg); }
 .task .t-time { font-weight: 600; color: var(--accent); font-variant-numeric: tabular-nums; }
@@ -149,14 +149,31 @@ textarea.input { resize: vertical; min-height: 88px; }
 .toast div { background: var(--ink); color: var(--bg); border-radius: 10px; padding: 10px 14px; font-size: 14px; max-width: 520px; }
 .toast div.err { background: var(--slip); color: #fff; }
 @media (max-width: 420px) {
-  .task { grid-template-columns: 24px 92px minmax(0, 1fr) 28px; gap: 6px; }
-  .addrow { grid-template-columns: 96px minmax(0, 1fr); }
-  .addrow .btn { grid-column: 1 / -1; }
+  .task { grid-template-columns: 24px minmax(0, 1fr) 28px; gap: 4px 6px; }
+  .task.tpl { grid-template-columns: minmax(0, 1fr) 28px; }
 }
 @media (prefers-reduced-motion: reduce) { .progress > div { transition: none; } }
 [hidden] { display: none !important; }
 input[type="time"]::-webkit-calendar-picker-indicator { display: none; }
 .t-time { padding-left: 6px; padding-right: 4px; font-size: 14px; }
+.tm { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 6px; }
+.tm .t-time { width: 90px; flex: none; }
+.tm .sep { color: var(--muted); }
+.dur { color: var(--muted); font-size: 13px; white-space: nowrap; }
+textarea.t-text { display: block; width: 100%; resize: none; overflow: hidden; line-height: 1.4; min-height: 36px; margin-top: 2px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.task .x { margin-top: 2px; }
+.addgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.addgrid .wide { grid-column: 1 / -1; }
+.bell { border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 99px; padding: 6px 12px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.bell[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.meter.warn > div { background: var(--warn); }
+.meter.over > div { background: var(--slip); }
+.catrow { padding: 8px 0; display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid var(--line); }
+.catrow:last-child { border-bottom: 0; }
+.catline { display: flex; justify-content: space-between; gap: 12px; font-variant-numeric: tabular-nums; font-size: 14px; }
+.catline span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.catline span:last-child { white-space: nowrap; color: var(--muted); }
+.twocol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 img { max-width: 100%; }
 html { -webkit-text-size-adjust: 100%; }
 body { margin: 0; }
@@ -195,7 +212,7 @@ select.input { appearance: auto; }
 <div class="wrap">
   <div class="brand">
     <h1>Intizom daftari</h1>
-    <span class="sync" id="sync"></span>
+    <button class="bell" id="bell" type="button" aria-pressed="false">Eslatma</button>
   </div>
   <div class="tabs" role="tablist" id="tabs"></div>
   <div class="banner" id="banner" hidden></div>
@@ -203,6 +220,7 @@ select.input { appearance: auto; }
   <section id="v-hafta" hidden></section>
   <section id="v-intizom" hidden></section>
   <section id="v-pul" hidden></section>
+  <section id="v-footer"></section>
 </div>
 <div class="toast" role="status" aria-live="polite" id="toast"></div>
 
@@ -210,22 +228,8 @@ select.input { appearance: auto; }
 (function () {
   "use strict";
 
-  /* ===== Shablonlar: Dushanba va Chorshanba ertalab o'qish, qolgan kunlar boshqacha. Kunlarni ilovaning o'zida tahrirlaysiz. ===== */
-  var STUDY = [
-    ["06:30", "Uyg'onish, nonushta"], ["08:00", "Darsga chiqish"], ["09:00", "O'qish (ertalabki darslar)"],
-    ["13:00", "Uyga qaytish, abet"], ["14:30", "Darsni takrorlash, uy vazifasi"], ["16:30", "Shaxsiy ishlar, loyiha"],
-    ["18:30", "Uy ishlari, oila bilan vaqt"], ["21:00", "Ertangi kunni rejalash, kitob o'qish"]
-  ];
-  var FREE = [
-    ["07:00", "Uyg'onish, nonushta, mashq"], ["09:00", "Asosiy vazifa (eng muhim ish)"], ["11:30", "Ikkinchi darajali ishlar, xabarlar"],
-    ["13:00", "Abet va dam olish"], ["15:00", "Ikkinchi ish bloki (o'qish yoki loyiha)"], ["17:00", "Uy ishlari, xaridlar"],
-    ["19:00", "Oila, do'stlar yoki sayr"], ["21:00", "Ertangi kunni rejalash, kitob o'qish"]
-  ];
-  var AFT = [
-    ["07:00", "Uyg'onish, nonushta, mashq"], ["09:00", "Shaxsiy ishlar, mustaqil o'qish"], ["12:30", "Tushlik, abet"],
-    ["13:30", "Darsga chiqish"], ["14:30", "O'qish (abetdan keyingi darslar)"], ["18:00", "Uyga qaytish, dam olish"],
-    ["19:30", "Darsni takrorlash, uy vazifasi"], ["21:30", "Ertangi kunni rejalash, kitob o'qish"]
-  ];
+  /* ===== Standart 7 kunlik jadval: [boshlanish, tugash, vazifa]. Kalit: 0=Yakshanba ... 6=Shanba ===== */
+  var DEFAULT_WEEK = {"1": [["06:45", "07:10", "Uyg'onish va zavtrak"], ["07:10", "07:25", "Universitet kiyimini kiyish: kostyum-shim, galstuk"], ["07:25", "08:30", "Yo'l: Kvartira → Sergeli → Bodomzor → TIU"], ["08:30", "09:50", "1-para: Konstitutsiyaviy huquq (ma'ruza)"], ["10:00", "11:20", "2-para: AKT (leksiya)"], ["11:30", "12:50", "3-para: HKM (ma'ruza)"], ["12:50", "13:55", "O'qishdan chiqish → Bodomzor metrosi → Sergeli → Kvartira"], ["13:55", "14:40", "Uy kiyimiga almashtirish va abet"], ["14:40", "16:40", "Qisqa dam olish va bugungi ma'ruzalarni konspekt qilish"], ["16:40", "19:00", "Fokus (Huquqiy hujjatlar): Ariza, shikoyat, tilxat va protsessual hujjatlar yozish amaliyoti"], ["19:00", "19:50", "Kechki ovqat"], ["19:50", "22:00", "Ertangi Dinshunoslik (ma'ruza/seminar) va IELTS/Ingliz tiliga tayyorgarlik"], ["22:00", "23:00", "Ertangi kun kiyimini tayyorlash, rejalash va uyqu"]], "2": [["07:30", "08:00", "Uyg'onish va zavtrak"], ["08:00", "11:10", "Fokus (IELTS / Ingliz tili): Writing Task 2, Reading, Listening va Dinshunoslik seminariga tayyorgarlik"], ["11:10", "12:00", "Abet va dam olish"], ["12:00", "12:20", "Universitet kiyimini kiyish: kostyum-shim, galstuk"], ["12:20", "13:30", "Yo'l: Kvartira → Sergeli → Bodomzor → TIU"], ["13:30", "14:50", "1-para: Dinshunoslik (ma'ruza)"], ["15:00", "16:20", "2-para: Ingliz tili"], ["16:30", "17:50", "3-para: Dinshunoslik (seminar)"], ["17:50", "18:55", "O'qishdan chiqish → Bodomzor metrosi → Sergeli → Kvartira"], ["18:55", "19:45", "Uy kiyimiga almashtirish va kechki ovqat"], ["19:45", "22:00", "Fokus (Dasturlash / AI): AI vositalari bilan ishlash, kod yozish va ertangi DHN/AKT darslariga tayyorgarlik"], ["22:00", "23:00", "Ertangi kunni rejalash, kiyim tayyorlash va uyqu"]], "3": [["06:45", "07:10", "Uyg'onish va zavtrak"], ["07:10", "07:25", "Universitet kiyimini kiyish: kostyum-shim, galstuk"], ["07:25", "08:30", "Yo'l: Kvartira → Sergeli → Bodomzor → TIU"], ["08:30", "09:50", "1-para: DHN (ma'ruza)"], ["10:00", "11:20", "2-para: AKT (amaliyot)"], ["11:20", "12:25", "O'qishdan chiqish → Bodomzor metrosi → Sergeli → Kvartira"], ["12:25", "13:10", "Uy kiyimiga almashtirish va abet"], ["13:10", "16:00", "Ertangi DHN seminar va Konstitutsiyaviy huquq seminariga chuqur tayyorgarlik"], ["16:00", "16:45", "Qisqa dam olish"], ["16:45", "19:00", "Fokus (Dasturlash / AI): Shaxsiy ilovalarni rivojlantirish, prompt-injiniring va dasturlash amaliyoti"], ["19:00", "19:45", "Kechki ovqat"], ["19:45", "22:00", "Fokus (Huquqiy hujjatlar): Kodekslar asosida shartnoma va huquqiy hujjatlar tuzish mashqi"], ["22:00", "23:00", "Ertangi kunni rejalash va uyqu"]], "4": [["07:30", "08:00", "Uyg'onish va zavtrak"], ["08:00", "11:10", "Fokus (IELTS + Seminarlar): IELTS Speaking/Vocabulary mashqlari va Konstitutsiya/DHN seminarlariga yakuniy tayyorgarlik"], ["11:10", "12:00", "Abet va dam olish"], ["12:00", "12:20", "Universitet kiyimini kiyish: kostyum-shim, galstuk"], ["12:20", "13:30", "Yo'l: Kvartira → Sergeli → Bodomzor → TIU"], ["13:30", "14:50", "1-para: DHN (seminar)"], ["15:00", "16:20", "2-para: Konstitutsiyaviy huquq (seminar)"], ["16:20", "17:25", "O'qishdan chiqish → Bodomzor metrosi → Sergeli → Kvartira"], ["17:25", "18:00", "Uy kiyimiga almashtirish va yengil tamaddi"], ["18:00", "19:45", "Ertangi HKM seminar va Ingliz tili darsiga tayyorgarlik"], ["19:45", "20:30", "Kechki ovqat"], ["20:30", "22:00", "Fokus (Huquqiy hujjatlar / Mutolaa): Yuridik hujjatlar tahlili va huquqiy adabiyot o'qish"], ["22:00", "23:00", "Ertangi kunni rejalash va uyqu"]], "5": [["07:30", "08:00", "Uyg'onish va zavtrak"], ["08:00", "10:45", "Fokus (IELTS / Ingliz tili): Full Mock test tahlili, HKM seminar savollari va Ingliz tili topshiriqlari"], ["10:45", "12:30", "Fokus (Dasturlash / AI): AI vositalarini huquqiy ishlar va o'qishda qo'llash bo'yicha amaliy mashg'ulot"], ["12:30", "13:45", "Abet va dam olish"], ["13:45", "14:05", "Universitet kiyimini kiyish: kostyum-shim, galstuk"], ["14:05", "15:00", "Yo'l: Kvartira → Sergeli → Bodomzor → TIU"], ["15:00", "16:20", "1-para: HKM (seminar)"], ["16:30", "17:50", "2-para: Ingliz tili"], ["17:50", "18:55", "O'qishdan chiqish → Bodomzor metrosi → Sergeli → Kvartira"], ["18:55", "19:45", "Uy kiyimiga almashtirish va kechki ovqat"], ["19:45", "22:30", "Haftalik intizom va bilim natijalarini sarhisob qilish, erkin hordiq"]], "6": [["08:00", "08:45", "Uyg'onish va zavtrak"], ["08:45", "11:30", "Uy ishlari: Kirlarni yuvish, kvartirani to'liq tozalash (uborka) va tartibga keltirish"], ["11:30", "13:00", "Fokus (Huquqiy hujjatlar): Hafta davomida o'rganilgan hujjat namunalarini mustahkamlash"], ["13:00", "14:15", "Abet va dam olish"], ["14:15", "16:30", "Fokus (IELTS / Ingliz tili): Speaking va Listening amaliyoti"], ["16:30", "19:00", "Fokus (Dasturlash / AI): Shaxsiy dasturlash loyihasi ustida ishlash"], ["19:00", "20:00", "Kechki ovqat"], ["20:00", "22:30", "Kiyimlarni dazmollash, ertangi sayohatga tayyorgarlik va hordiq"]], "0": [["08:00", "08:45", "Uyg'onish va zavtrak"], ["08:45", "09:30", "Sayohatga tayyorgarlik va yo'lga chiqish"], ["09:30", "17:30", "Sayohat va hordiq: Yangi joylarni kashf etish, tarixiy/madaniy maskanlar yoki tabiat qo'ynida sayohat"], ["17:30", "18:30", "Uyga qaytish va kiyim almashtirish"], ["18:30", "19:30", "Kechki ovqat va dam olish"], ["19:30", "20:45", "Haftalik intizom, bilim va sayohat/pul xarajatlarini tahlil qilish"], ["20:45", "22:30", "Dushanba kiyimlari (kostyum-shim, galstuk) va sumkani tayyorlash, uyquga hozirlik"]]};
   var WEEKDAYS = ["Yakshanba", "Dushanba", "Seshanba", "Chorshanba", "Payshanba", "Juma", "Shanba"];
   var MONTHS = ["yanvar", "fevral", "mart", "aprel", "may", "iyun", "iyul", "avgust", "sentabr", "oktabr", "noyabr", "dekabr"];
   var TABS = [["bugun", "Bugun"], ["hafta", "Hafta"], ["intizom", "Intizom"], ["pul", "Pul"]];
@@ -259,40 +263,66 @@ select.input { appearance: auto; }
   function todayKey() { return keyOf(new Date()); }
   function addDays(k, n) { var d = parseKey(k); d.setDate(d.getDate() + n); return keyOf(d); }
   function defaultTpl(wd) {
-    var src = (wd === 1 || wd === 3) ? STUDY : (wd === 0 ? FREE : AFT);
-    return src.map(function (t) { return { time: t[0], text: t[1] }; });
+    return (DEFAULT_WEEK[String(wd)] || []).map(function (t) { return { time: t[0], end: t[1], text: t[2] }; });
   }
   function templateFor(wd) {
     var c = config.days && config.days[String(wd)];
     return c ? clone(c) : defaultTpl(wd);
   }
   function byTime(a, b) { return (a.time || "99:99").localeCompare(b.time || "99:99"); }
+  function toMin(v) { var m = /^(\d\d):(\d\d)$/.exec(v || ""); return m ? (+m[1]) * 60 + (+m[2]) : null; }
+  function durMin(a, b) { var x = toMin(a), y = toMin(b); if (x === null || y === null || x === y) return null; var d = y - x; return d < 0 ? d + 1440 : d; }
+  function durText(d) { if (d <= 90) return d + " daq"; var h = Math.floor(d / 60), m = d % 60; return h + " soat" + (m ? " " + m + " daq" : ""); }
+  function fit(ta) { if (!ta.offsetParent) return; ta.style.height = "auto"; ta.style.height = (ta.scrollHeight + 2) + "px"; }
+  function fitAll() { Array.prototype.forEach.call(document.querySelectorAll("textarea.t-text"), fit); }
+  /* boshlanish - tugash (davomiylik) qatori; onPatch({time}) yoki onPatch({end}) */
+  function timeRow(t, onPatch) {
+    var dm = durMin(t.time, t.end);
+    return el("div", { class: "tm" },
+      el("input", { class: "field t-time", type: "time", value: toMin(t.time) === null ? "" : t.time, "aria-label": "Boshlanish vaqti", onchange: function (e) { onPatch({ time: e.target.value || "--:--" }); } }),
+      el("span", { class: "sep", text: "–" }),
+      el("input", { class: "field t-time", type: "time", value: toMin(t.end) === null ? "" : t.end, "aria-label": "Tugash vaqti", onchange: function (e) { onPatch({ end: e.target.value || "" }); } }),
+      dm !== null ? el("span", { class: "dur", text: "(" + durText(dm) + ")" }) : null);
+  }
+  /* uzun matn qatorlarga tushadi, to'liq ko'rinadi */
+  function textArea(value, onCommit) {
+    var ta = el("textarea", { class: "field t-text", rows: 1, value: value, "aria-label": "Vazifa", spellcheck: false });
+    ta.addEventListener("input", function () { fit(ta); });
+    ta.addEventListener("keydown", function (e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); ta.blur(); } });
+    ta.addEventListener("change", function () { var v = ta.value.replace(/\s+/g, " ").trim(); if (!v) { renderAll(); return; } onCommit(v); });
+    return ta;
+  }
+  function addGrid(timeIn, endIn, textIn, onAdd) {
+    return el("div", { class: "addgrid" },
+      el("div", {}, el("label", { class: "flabel", text: "Boshlanish" }), timeIn),
+      el("div", {}, el("label", { class: "flabel", text: "Tugash" }), endIn),
+      el("div", { class: "wide" }, textIn),
+      el("button", { class: "btn wide", text: "Qo'shish", onclick: onAdd }));
+  }
   function fmtLong(d) { return WEEKDAYS[d.getDay()] + ", " + d.getDate() + "-" + MONTHS[d.getMonth()]; }
   function fmtTime(ts) { var d = new Date(ts); return pad(d.getHours()) + ":" + pad(d.getMinutes()); }
   function mb(b) { return (b / 1048576).toFixed(b > 10485760 ? 0 : 1) + " MB"; }
 
   var toastTimer = null;
-  function toast(msg, isErr) {
+  function toast(msg, isErr, ms) {
     var box = document.getElementById("toast");
     box.replaceChildren(el("div", { class: isErr ? "err" : "", text: msg }));
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { box.replaceChildren(); }, isErr ? 6000 : 4500);
+    toastTimer = setTimeout(function () { box.replaceChildren(); }, ms || (isErr ? 6000 : 4500));
   }
 
   /* ===== state ===== */
   var STORE_KEY = "intizom-daftari-v1", storageOk = true, lastToday = todayKey();
   var days = {}, drafts = {}, notes = [], config = { days: {} }, money = defaultMoney();
-  var loaded = { days: false, notes: false };
   var sel = todayKey();
   var view = "bugun";
-  var onlyEvents = false;
-  var confirmDel = null, confirmReset = false;
+  var confirmReset = false, confirmWeek = false;
   var pending = [];
   var writeChain = Promise.resolve();
 
   function newDay(k) {
     var tpl = templateFor(parseKey(k).getDay());
-    return { date: k, tasks: tpl.map(function (t) { return { id: uid(), time: t.time, text: t.text, done: false }; }), status: "", note: "" };
+    return { date: k, tasks: tpl.map(function (t) { return { id: uid(), time: t.time, end: t.end || "", text: t.text, done: false }; }), status: "", note: "" };
   }
   function viewDay(k) { return days[k] || drafts[k] || (drafts[k] = newDay(k)); }
   function ensureDay(k) { if (!days[k]) days[k] = drafts[k] || newDay(k); return days[k]; }
@@ -308,7 +338,9 @@ select.input { appearance: auto; }
         if (!config.days) config.days = {};
       }
     } catch (e) { storageOk = false; }
+    fixMoney();
   }
+  function fixMoney() { if (!money.limits || typeof money.limits !== "object") money.limits = { month: 0, day: 0 }; }
   function saveStore() {
     try { localStorage.setItem(STORE_KEY, JSON.stringify({ days: days, notes: notes, config: config, money: money })); storageOk = true; }
     catch (e) { storageOk = false; toast("Saqlab bo'lmadi: xotira yopiq yoki to'lgan", true); }
@@ -321,7 +353,7 @@ select.input { appearance: auto; }
     var b = document.getElementById("banner");
     if (storageOk) { b.hidden = true; return; }
     b.hidden = false;
-    b.textContent = "Brauzer xotirasi ishlamayapti, o'zgarishlar saqlanmaydi. Maxfiy oynadan chiqing yoki Zaxira tabidan faylga saqlang.";
+    b.textContent = "Brauzer xotirasi ishlamayapti, o'zgarishlar saqlanmaydi. Maxfiy oynadan chiqing yoki sahifa pastidagi Zaxira tugmasi bilan faylga saqlang.";
   }
   function renderTabs() {
     document.getElementById("tabs").replaceChildren.apply(document.getElementById("tabs"), TABS.map(function (t) {
@@ -362,17 +394,19 @@ select.input { appearance: auto; }
     d.tasks.forEach(function (t) {
       list.append(el("li", { class: "task" + (t.done ? " done" : "") },
         el("input", { type: "checkbox", checked: t.done, "aria-label": "Bajarildi", onchange: function (e) { var x = findTask(t.id); x.done = e.target.checked; persistDay(sel); renderAll(); } }),
-        el("input", { class: "field t-time", type: "time", value: t.time === "--:--" ? "" : t.time, "aria-label": "Vaqt", onchange: function (e) { var x = findTask(t.id); x.time = e.target.value || "--:--"; sortTasks(ensureDay(sel)); persistDay(sel); renderAll(); } }),
-        el("input", { class: "field t-text", type: "text", value: t.text, "aria-label": "Vazifa", onchange: function (e) { var v = e.target.value.trim(); if (!v) { renderAll(); return; } findTask(t.id).text = v; persistDay(sel); renderAll(); } }),
+        el("div", {},
+          timeRow(t, function (patch) { Object.assign(findTask(t.id), patch); sortTasks(ensureDay(sel)); persistDay(sel); renderAll(); }),
+          textArea(t.text, function (v) { findTask(t.id).text = v; persistDay(sel); renderAll(); })),
         el("button", { class: "x", "aria-label": "O'chirish", text: "×", onclick: function () { var dd = ensureDay(sel); dd.tasks = dd.tasks.filter(function (z) { return z.id !== t.id; }); persistDay(sel); renderAll(); } })));
     });
 
-    var timeIn = el("input", { class: "input", type: "time", id: "add-time", "aria-label": "Yangi vazifa vaqti" });
+    var timeIn = el("input", { class: "input", type: "time", id: "add-time", "aria-label": "Yangi vazifa boshlanish vaqti" });
+    var endIn = el("input", { class: "input", type: "time", id: "add-end", "aria-label": "Yangi vazifa tugash vaqti" });
     var textIn = el("input", { class: "input", type: "text", id: "add-text", placeholder: "Yangi vazifa...", "aria-label": "Yangi vazifa" });
     function add() {
       var v = textIn.value.trim(); if (!v) return;
       var dd = ensureDay(sel);
-      dd.tasks.push({ id: uid(), time: timeIn.value || "--:--", text: v, done: false });
+      dd.tasks.push({ id: uid(), time: timeIn.value || "--:--", end: endIn.value || "", text: v, done: false });
       sortTasks(dd); persistDay(sel); renderAll();
       setTimeout(function () { var i = document.getElementById("add-text"); if (i) i.focus(); }, 0);
     }
@@ -385,7 +419,7 @@ select.input { appearance: auto; }
           el("div", { class: "progress", role: "progressbar", "aria-valuenow": pct, "aria-valuemin": 0, "aria-valuemax": 100 }, el("div", { style: "width:" + pct + "%" })),
           el("div", { class: "pmeta" }, el("span", { text: "Bajarildi: " + done + " / " + d.tasks.length }), el("span", { text: pct + "%" }))),
         d.tasks.length ? list : el("div", { class: "empty", text: "Bu kunda reja yo'q. Pastdan birinchi vazifani qo'shing." }),
-        el("div", { class: "addrow" }, timeIn, textIn, el("button", { class: "btn", text: "Qo'shish", onclick: add })),
+        addGrid(timeIn, endIn, textIn, add),
         el("div", { class: "btnrow" },
           confirmReset
             ? [el("span", { class: "small muted", text: "Shu kun rejasi shablonga qaytariladi, belgilar o'chadi." }),
@@ -410,9 +444,19 @@ select.input { appearance: auto; }
   }
   function saveAsTemplate() {
     var wd = parseKey(sel).getDay();
-    setTemplate(wd, viewDay(sel).tasks.map(function (t) { return { time: t.time, text: t.text }; }).sort(byTime));
+    setTemplate(wd, viewDay(sel).tasks.map(function (t) { return { time: t.time, end: t.end || "", text: t.text }; }).sort(byTime));
     toast(WEEKDAYS[wd] + " shabloni yangilandi");
     renderAll();
+  }
+  function restoreWeek() {
+    config.days = {}; drafts = {};
+    var tk = todayKey();
+    Object.keys(days).forEach(function (k) {
+      var d = days[k];
+      if (k >= tk && !d.status && !d.note && d.tasks.every(function (t) { return !t.done; })) d.tasks = newDay(k).tasks;
+    });
+    confirmWeek = false; saveStore();
+    toast("Standart 7 kunlik jadval tiklandi", false, 5000); renderAll();
   }
   function renderHafta() {
     var root = document.getElementById("v-hafta");
@@ -429,19 +473,19 @@ select.input { appearance: auto; }
     var list = el("ul", { class: "tasks" });
     tpl.forEach(function (t, i) {
       list.append(el("li", { class: "task tpl" },
-        el("input", { class: "field t-time", type: "time", value: t.time === "--:--" ? "" : t.time, "aria-label": "Vaqt",
-          onchange: function (e) { var n = templateFor(tplDay); n[i].time = e.target.value || "--:--"; commit(n); } }),
-        el("input", { class: "field t-text", type: "text", value: t.text, "aria-label": "Vazifa",
-          onchange: function (e) { var v = e.target.value.trim(); if (!v) { renderAll(); return; } var n = templateFor(tplDay); n[i].text = v; commit(n); } }),
+        el("div", {},
+          timeRow(t, function (patch) { var n = templateFor(tplDay); Object.assign(n[i], patch); commit(n); }),
+          textArea(t.text, function (v) { var n = templateFor(tplDay); n[i].text = v; commit(n); })),
         el("button", { class: "x", "aria-label": "O'chirish", text: "×",
           onclick: function () { var n = templateFor(tplDay); n.splice(i, 1); commit(n); } })));
     });
 
-    var timeIn = el("input", { class: "input", type: "time", id: "tpl-add-time", "aria-label": "Yangi vazifa vaqti" });
+    var timeIn = el("input", { class: "input", type: "time", id: "tpl-add-time", "aria-label": "Yangi vazifa boshlanish vaqti" });
+    var endIn = el("input", { class: "input", type: "time", id: "tpl-add-end", "aria-label": "Yangi vazifa tugash vaqti" });
     var textIn = el("input", { class: "input", type: "text", id: "tpl-add-text", placeholder: "Shablonga vazifa qo'shish...", "aria-label": "Shablonga yangi vazifa" });
     function add() {
       var v = textIn.value.trim(); if (!v) return;
-      var n = templateFor(tplDay); n.push({ time: timeIn.value || "--:--", text: v }); commit(n);
+      var n = templateFor(tplDay); n.push({ time: timeIn.value || "--:--", end: endIn.value || "", text: v }); commit(n);
     }
     textIn.addEventListener("keydown", function (e) { if (e.key === "Enter") add(); });
 
@@ -459,14 +503,24 @@ select.input { appearance: auto; }
       renderAll();
     }
 
+    var stdCard = el("div", { class: "card" },
+      el("h2", { text: "Standart jadval" }),
+      el("p", { class: "muted small", text: "Dushanbadan yakshanbagacha tayyor 7 kunlik jadval ilovaning ichida bor. Tugmani bosganingizda barcha kunlar shu jadval bilan to'ladi. Sizning o'zgartirishlaringiz shablonda o'chadi. Bugun va keyingi kunlarda belgi qo'yilgan kunlar o'zgarmaydi." }),
+      confirmWeek
+        ? el("div", { class: "btnrow" },
+            el("button", { class: "btn danger", text: "Ha, hammasini tikla", onclick: restoreWeek }),
+            el("button", { class: "btn ghost", text: "Bekor", onclick: function () { confirmWeek = false; renderAll(); } }))
+        : el("div", { class: "btnrow" }, el("button", { class: "btn", text: "Standart jadvalni tiklash", onclick: function () { confirmWeek = true; renderAll(); } })));
+
     root.replaceChildren(el("div", { class: "wrap" },
+      stdCard,
       el("div", { class: "card" },
         el("h2", { text: "Hafta shabloni" }),
         el("p", { class: "muted small", text: "Har hafta kuni uchun rejani bir marta yozasiz. Yangi ochilgan kun o'sha kunning shablonidan to'ladi. Allaqachon ochilgan kunlar o'zgarmaydi." }),
         chips,
         el("div", { class: "dl-main", text: WEEKDAYS[tplDay] }),
         tpl.length ? list : el("div", { class: "empty", text: "Bu kunning shabloni bo'sh. Pastdan vazifa qo'shing." }),
-        el("div", { class: "addrow" }, timeIn, textIn, el("button", { class: "btn", text: "Qo'shish", onclick: add })),
+        addGrid(timeIn, endIn, textIn, add),
         el("div", { class: "btnrow" },
           confirmTplReset
             ? [el("span", { class: "small muted", text: "Bu kunning shabloni boshlang'ich holatga qaytadi." }),
@@ -547,62 +601,37 @@ select.input { appearance: auto; }
           : el("div", { class: "empty", text: "Hali yo'q. Yo'l qo'ygan kuningizni belgilab, sababini yozsangiz, takrorlanadigan holatlar ko'rinadi." }))));
   }
 
-  /* ===== BLOKNOT ===== */
-  var composerBuilt = false, composer = {};
-  function buildComposer() {
-    composerBuilt = true;
-    composer.text = el("textarea", { class: "input", id: "note-text", rows: 4, placeholder: "Bugun nima bo'ldi? Fikr, reja, qiziqarli voqea...", "aria-label": "Yangi yozuv" });
-    composer.event = el("input", { type: "checkbox", id: "note-event" });
-    composer.save = el("button", { class: "btn", text: "Saqlash", onclick: saveNote });
-    composer.box = el("div", { class: "card" },
-      el("h2", { text: "Yangi yozuv" }),
-      composer.text,
-      el("div", { class: "btnrow" }, composer.save, el("label", { class: "check" }, composer.event, "Qiziqarli voqea")));
-  }
-  function saveNote() {
-    var text = composer.text.value.trim();
-    if (!text) { toast("Avval biror narsa yozing", true); return; }
-    notes.unshift({ id: uid(), date: todayKey(), ts: Date.now(), text: text, event: composer.event.checked });
-    notes.sort(function (a, b) { return (b.ts || 0) - (a.ts || 0); });
-    saveStore();
-    composer.text.value = ""; composer.event.checked = false;
-    toast("Saqlandi");
-    renderAll();
-  }
-  function deleteNote(n) {
-    notes = notes.filter(function (x) { return x.id !== n.id; });
-    confirmDel = null;
-    saveStore(); toast("O'chirildi"); renderAll();
-  }
-  function renderBloknot() {
-    var root = document.getElementById("v-bloknot");
-    if (!composerBuilt) buildComposer();
-    var list = notes.filter(function (n) { return !onlyEvents || n.event; });
-    var feed = el("div", { class: "wrap" });
-    if (!list.length) feed.append(el("div", { class: "empty", text: onlyEvents ? "Qiziqarli voqea belgilangan yozuv yo'q." : "Daftar bo'sh. Yuqorida birinchi yozuvni yarating." }));
-    var lastDate = "";
-    list.forEach(function (n) {
-      if (n.date !== lastDate) { lastDate = n.date; feed.append(el("div", { class: "dayhead", text: fmtLong(parseKey(n.date)) + ", " + parseKey(n.date).getFullYear() })); }
-      feed.append(el("div", { class: "entry" },
-        el("div", { class: "meta" }, el("span", { text: fmtTime(n.ts) }), n.event ? el("span", { class: "badge", text: "Qiziqarli voqea" }) : null),
-        el("div", { class: "body", text: n.text || "" }),
-        el("div", { class: "btnrow" },
-          confirmDel === n.id
-            ? [el("button", { class: "btn danger", text: "Ha, o'chir", onclick: function () { deleteNote(n); } }), el("button", { class: "btn ghost", text: "Bekor", onclick: function () { confirmDel = null; renderAll(); } })]
-            : el("button", { class: "linkbtn", text: "O'chirish", onclick: function () { confirmDel = n.id; renderAll(); } }))));
-    });
-    var filter = el("label", { class: "check" }, el("input", { type: "checkbox", id: "only-events", checked: onlyEvents, onchange: function (e) { onlyEvents = e.target.checked; renderAll(); } }), "Faqat qiziqarli voqealar");
-    root.replaceChildren(el("div", { class: "wrap" }, composer.box, filter, feed));
-  }
-
   /* ===== PUL ===== */
-  var form = { type: "out", acc: "", to: "", date: "", amount: "", note: "" };
-  var confirmTx = null, newAccName = "";
+  var form = { type: "out", acc: "", to: "", date: "", amount: "", note: "", cat: "Ovqat" };
+  var confirmTx = null, newAccName = "", catScope = "month";
   function defaultMoney() {
     return { accounts: [
       { id: "a1", name: "Karta", open: 0 }, { id: "a2", name: "Naqd pul", open: 0 },
       { id: "a3", name: "Jamg'arma", open: 0 }, { id: "a4", name: "Boshqa", open: 0 }
-    ], tx: [] };
+    ], tx: [], limits: { month: 0, day: 0 } };
+  }
+  var CATS = ["Ovqat", "Yo'l haqi", "Sayohat", "Xarid", "O'qish", "Aloqa va to'lovlar", "Boshqa"];
+  var KW = [
+    ["Ovqat", /ovqat|tushlik|nonushta|kechki|abet|\bnon\b|choy|kofe|coffee|kafe|restoran|burger|lavash|\bosh\b|go'sht|meva|sabzavot|bozor|market|ichimlik|shirinlik|pishiriq|tamaddi/],
+    ["Yo'l haqi", /yo'l|yol haqi|taksi|taxi|metro|avtobus|benzin|yandex|transport|bilet/],
+    ["Sayohat", /sayohat|safar|mehmonxona|hotel|ekskursiya|muzey|piknik|turizm/],
+    ["Xarid", /xarid|kiyim|poyabzal|do'kon|sovg'a|kosmetika|telefon|noutbuk|dazmol/],
+    ["O'qish", /kitob|kurs|ielts|daftar|ruchka|printer|nusxa|kontrakt|dars/],
+    ["Aloqa va to'lovlar", /internet|aloqa|tarif|mobil|kommunal|svet|gaz|obuna|to'lov|ijara|payme|click/]
+  ];
+  function catOf(t) {
+    if (t.cat && CATS.indexOf(t.cat) >= 0) return t.cat;
+    var n = String(t.note || "").toLowerCase().replace(/[\u2018\u2019\u02bb\u02bc`]/g, "'");
+    for (var i = 0; i < KW.length; i++) if (KW[i][1].test(n)) return KW[i][0];
+    return "Boshqa";
+  }
+  function spentIn(prefix) { var s = 0; money.tx.forEach(function (t) { if (t.type === "out" && String(t.date).indexOf(prefix) === 0) s += t.amount; }); return s; }
+  function limitWarn(t) {
+    if (t.type !== "out") return "";
+    var out = [], ml = money.limits.month, dl = money.limits.day;
+    if (ml) { var ms = spentIn(String(t.date).slice(0, 7)); if (ms > ml) out.push("Diqqat: oylik limitdan " + group(ms - ml) + " so'm oshdi."); else if (ms >= ml * 0.8) out.push("Oylik limitning " + Math.round(ms * 100 / ml) + "% sarflandi."); }
+    if (dl && spentIn(t.date) > dl) out.push("Kunlik limitdan oshdi.");
+    return out.join(" ");
   }
   function digits(v) { return String(v || "").replace(/\D/g, "").slice(0, 12); }
   function group(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " "); }
@@ -634,12 +663,14 @@ select.input { appearance: auto; }
     if (form.type === "move" && (!form.to || form.to === form.acc)) { toast("O'tkazma uchun ikkinchi hisobni tanlang", true); return; }
     var t = { id: uid(), date: form.date || todayKey(), ts: Date.now(), type: form.type, acc: form.acc, amount: amt, note: form.note.trim() };
     if (form.type === "move") t.to = form.to;
+    if (form.type === "out") t.cat = form.cat;
     money.tx.push(t); saveStore();
     form.amount = ""; form.note = "";
     var left = form.type === "move"
       ? accName(t.acc) + ": qoldi " + fmtMoney(accBalance(t.acc)) + ". " + accName(t.to) + ": qoldi " + fmtMoney(accBalance(t.to))
       : accName(t.acc) + ": qoldi " + fmtMoney(accBalance(t.acc));
-    toast("Yozildi. " + left); renderAll();
+    var warn = limitWarn(t);
+    toast("Yozildi. " + left + (warn ? " " + warn : ""), false, warn ? 8000 : 0); renderAll();
   }
   function renderPul() {
     var root = document.getElementById("v-pul");
@@ -678,6 +709,8 @@ select.input { appearance: auto; }
     noteIn.addEventListener("keydown", function (e) { if (e.key === "Enter") addTx(); });
     var dateIn = el("input", { class: "input", id: "f-date", type: "date", value: form.date, "aria-label": "Sana", onchange: function (e) { form.date = e.target.value || todayKey(); } });
 
+    var catSel = el("select", { class: "input", id: "f-cat", "aria-label": "Turkum", onchange: function (e) { form.cat = e.target.value; } }, CATS.map(function (c) { return el("option", { value: c, text: c }); }));
+    catSel.value = CATS.indexOf(form.cat) >= 0 ? form.cat : "Ovqat";
     var formCard = el("div", { class: "card" },
       el("h2", { text: "Yangi yozuv" }),
       el("div", { class: "seg" }, typeBtn("in", "Kirim"), typeBtn("out", "Chiqim"), typeBtn("move", "O'tkazma")),
@@ -688,6 +721,7 @@ select.input { appearance: auto; }
           accSelect("f-acc", form.acc, function (e) { form.acc = e.target.value; renderAll(); })),
         form.type === "move" ? el("div", {}, el("label", { class: "flabel", for: "f-to", text: "Qaysi hisobga" }),
           accSelect("f-to", form.to, function (e) { form.to = e.target.value; })) : null,
+        form.type === "out" ? el("div", {}, el("label", { class: "flabel", for: "f-cat", text: "Turkum" }), catSel) : null,
         el("div", {}, el("label", { class: "flabel", for: "f-note", text: "Izoh" }), noteIn),
         el("div", {}, el("label", { class: "flabel", for: "f-date", text: "Sana" }), dateIn)),
       el("div", { class: "btnrow" }, el("button", { class: "btn", text: "Yozib qo'yish", onclick: addTx })));
@@ -706,6 +740,52 @@ select.input { appearance: auto; }
     dayRows.push(el("div", { class: "sumrow" }, el("b", { text: "Shu oy jami" }), el("b", { class: "pos", text: "+" + group(mIn) }), el("b", { class: "neg", text: "−" + group(mOut) })));
     var sumCard = el("div", { class: "card" }, el("h2", { text: "Oxirgi 7 kun" }), el("div", {}, dayRows));
 
+    /* limit va tahlil */
+    var lim = money.limits, mSpent = spentIn(mp), dSpent = spentIn(tk);
+    function limInput(id, label, key) {
+      var inp = el("input", { class: "input", id: id, type: "text", inputMode: "numeric", placeholder: "Limitsiz", value: lim[key] ? group(lim[key]) : "", "aria-label": label });
+      inp.addEventListener("input", function () { var d = digits(inp.value); inp.value = d ? group(parseInt(d, 10)) : ""; });
+      inp.addEventListener("change", function () { lim[key] = parseInt(digits(inp.value) || "0", 10); saveStore(); renderAll(); });
+      return el("div", {}, el("label", { class: "flabel", for: id, text: label }), inp);
+    }
+    function meterRow(title, spent, limit) {
+      var pct = limit ? Math.min(100, Math.round(spent * 100 / limit)) : 0, over = limit && spent > limit;
+      return el("div", { style: "display:flex;flex-direction:column;gap:6px;" },
+        el("div", { class: "pmeta" }, el("span", { text: title }), el("span", { class: over ? "neg" : "", text: limit ? fmtMoney(spent) + " / " + fmtMoney(limit) : fmtMoney(spent) })),
+        limit ? el("div", { class: "meter" + (over ? " over" : pct >= 80 ? " warn" : ""), role: "progressbar", "aria-valuenow": pct, "aria-valuemin": 0, "aria-valuemax": 100 }, el("div", { style: "width:" + pct + "%" })) : null,
+        limit ? el("div", { class: "small " + (over ? "neg" : "muted"), text: over ? "Limitdan oshdi: " + fmtMoney(spent - limit) : "Qoldi: " + fmtMoney(limit - spent) }) : null);
+    }
+    var nowD = new Date(), dim = new Date(nowD.getFullYear(), nowD.getMonth() + 1, 0).getDate(), daysLeft = dim - nowD.getDate() + 1;
+    var perDay = lim.month && mSpent < lim.month ? Math.floor((lim.month - mSpent) / daysLeft) : 0;
+    var limitCard = el("div", { class: "card" },
+      el("h2", { text: "Xarajat limiti" }),
+      meterRow("Shu oy sarflandi", mSpent, lim.month),
+      perDay ? el("div", { class: "small muted", text: "Oy oxirigacha (" + daysLeft + " kun) kuniga taxminan " + fmtMoney(perDay) + " sarflasangiz, limitga sig'asiz." }) : null,
+      meterRow("Bugun sarflandi", dSpent, lim.day),
+      el("div", { class: "twocol" }, limInput("lim-month", "Oylik limit (so'm)", "month"), limInput("lim-day", "Kunlik limit (so'm)", "day")),
+      el("div", { class: "small muted", text: "Limitni 0 yoki bo'sh qoldirsangiz, cheklov yoqilmaydi. 80% dan oshganda va limitdan oshganda yozuv paytida ogohlantirish chiqadi." }));
+
+    var totals = {}, catSum = 0;
+    money.tx.forEach(function (t) {
+      if (t.type !== "out") return;
+      if (catScope === "month" && String(t.date).slice(0, 7) !== mp) return;
+      var c = catOf(t); totals[c] = (totals[c] || 0) + t.amount; catSum += t.amount;
+    });
+    var catNames = Object.keys(totals).sort(function (a, b) { return totals[b] - totals[a]; });
+    function scopeBtn(key, label) { return el("button", { class: "segbtn t-move", "aria-pressed": catScope === key ? "true" : "false", text: label, onclick: function () { catScope = key; renderAll(); } }); }
+    var catCard = el("div", { class: "card" },
+      el("h2", { text: "Xarajatlar turkumlar bo'yicha" }),
+      el("div", { class: "seg", style: "grid-template-columns:repeat(2,minmax(0,1fr));" }, scopeBtn("month", "Shu oy"), scopeBtn("all", "Hammasi")),
+      catNames.length
+        ? el("div", {}, catNames.map(function (c) {
+            var pc = catSum ? Math.round(totals[c] * 100 / catSum) : 0;
+            return el("div", { class: "catrow" },
+              el("div", { class: "catline" }, el("span", { text: c }), el("span", { text: fmtMoney(totals[c]) + " · " + pc + "%" })),
+              el("div", { class: "meter" }, el("div", { style: "width:" + pc + "%" })));
+          }), el("div", { class: "catrow" }, el("div", { class: "catline" }, el("b", { text: "Jami chiqim" }), el("b", { text: fmtMoney(catSum) }))))
+        : el("div", { class: "empty", text: "Bu davrda chiqim yozuvi yo'q." }),
+      el("div", { class: "small muted", text: "Turkum chiqim yozayotganda tanlanadi. Eski yozuvlar izohidagi so'zga qarab (tushlik, taksi, kitob...) o'zi taqsimlanadi." }));
+
     var sorted = money.tx.slice().sort(function (a, b) { return a.date === b.date ? (b.ts || 0) - (a.ts || 0) : (a.date < b.date ? 1 : -1); });
     var shown = sorted.slice(0, 100), txBox = el("div", {}), lastD = "";
     if (!shown.length) txBox.append(el("div", { class: "empty", text: "Hali yozuv yo'q. Yuqoridan birinchi kirim yoki chiqimni yozing." }));
@@ -718,7 +798,7 @@ select.input { appearance: auto; }
       }
       var sign = t.type === "in" ? "+" : t.type === "out" ? "−" : "";
       var label = t.note || (t.type === "in" ? "Kirim" : t.type === "out" ? "Chiqim" : "O'tkazma");
-      var where = t.type === "move" ? accName(t.acc) + " → " + accName(t.to) : accName(t.acc);
+      var where = t.type === "move" ? accName(t.acc) + " → " + accName(t.to) : accName(t.acc) + (t.type === "out" ? " · " + catOf(t) : "");
       txBox.append(el("div", { class: "txrow" },
         el("div", { class: "title", text: label }),
         el("div", { class: "amt " + (t.type === "in" ? "pos" : t.type === "out" ? "neg" : ""), text: sign + group(t.amount) }),
@@ -757,34 +837,27 @@ select.input { appearance: auto; }
       accEdit,
       el("div", { class: "addrow", style: "grid-template-columns: minmax(0, 1fr) auto;" }, addAccIn, el("button", { class: "btn", text: "Qo'shish", onclick: addAcc })));
 
-    root.replaceChildren(el("div", { class: "wrap" }, balCard, formCard, sumCard, txCard, accCard));
+    root.replaceChildren(el("div", { class: "wrap" }, balCard, formCard, limitCard, catCard, sumCard, txCard, accCard));
   }
 
-  /* ===== ZAXIRA ===== */
+  /* ===== ZAXIRA (sahifa pastida) ===== */
   var pendingImport = null;
-  function backupJson() { return JSON.stringify({ app: "intizom-daftari", version: 1, days: days, notes: notes, config: config, money: money }, null, 2); }
-  function exportMd() {
-    var out = "# Kundalik\n\n", last = "";
-    notes.forEach(function (n) {
-      if (n.date !== last) { last = n.date; out += "\n## " + n.date + "\n\n"; }
-      out += "**" + fmtTime(n.ts) + "**" + (n.event ? " (qiziqarli voqea)" : "") + "\n\n" + (n.text || "") + "\n\n";
-    });
-    return out;
-  }
+  function backupJson() { return JSON.stringify({ app: "intizom-daftari", version: 2, days: days, notes: notes, config: config, money: money }, null, 2); }
+  function markBackup() { config.lastBackup = todayKey(); saveStore(); renderFooter(); }
   function saveFile(name, text, type) {
     try {
       var url = URL.createObjectURL(new Blob([text], { type: type }));
       var a = document.createElement("a");
       a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
       setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
-      toast("Fayl yuklab olindi: " + name);
+      toast("Fayl yuklab olindi: " + name); markBackup();
     } catch (e) { toast("Fayl saqlanmadi", true); }
   }
   function shareBackup() {
     var f;
     try { f = new File([backupJson()], "intizom-daftari-" + todayKey() + ".json", { type: "application/json" }); } catch (e) { f = null; }
     if (f && navigator.canShare && navigator.canShare({ files: [f] })) {
-      navigator.share({ files: [f], title: "Intizom daftari zaxirasi" }).catch(function (e) { if (!e || e.name !== "AbortError") toast("Ulashib bo'lmadi", true); });
+      navigator.share({ files: [f], title: "Intizom daftari zaxirasi" }).then(markBackup).catch(function (e) { if (!e || e.name !== "AbortError") toast("Ulashib bo'lmadi", true); });
     } else { toast("Bu qurilmada ulashish ishlamaydi. Faylni yuklab oling.", true); }
   }
   function readImport(file) {
@@ -793,7 +866,8 @@ select.input { appearance: auto; }
       try {
         var o = JSON.parse(String(r.result));
         if (!o || typeof o.days !== "object" || o.days === null || Array.isArray(o.days)) throw new Error("bad");
-        pendingImport = o; renderAll();
+        pendingImport = o; renderFooter();
+        var c = document.getElementById("import-confirm"); if (c && c.scrollIntoView) c.scrollIntoView({ block: "center" });
       } catch (e) { toast("Bu fayl intizom daftari zaxirasiga o'xshamaydi", true); }
     };
     r.onerror = function () { toast("Faylni o'qib bo'lmadi", true); };
@@ -804,39 +878,110 @@ select.input { appearance: auto; }
     var clean = {};
     Object.keys(o.days).forEach(function (k) { var d = o.days[k]; if (d && /^\d{4}-\d{2}-\d{2}$/.test(k) && Array.isArray(d.tasks)) clean[k] = d; });
     days = clean;
-    notes = (Array.isArray(o.notes) ? o.notes : []).filter(function (n) { return n && n.text; })
-      .map(function (n) { return { id: n.id || uid(), date: n.date || todayKey(), ts: n.ts || Date.now(), text: String(n.text), event: !!n.event }; })
-      .sort(function (a, b) { return (b.ts || 0) - (a.ts || 0); });
+    notes = Array.isArray(o.notes) ? o.notes : [];
     config = (o.config && typeof o.config === "object") ? o.config : { days: {} };
     if (!config.days) config.days = {};
     if (o.money && Array.isArray(o.money.accounts) && o.money.accounts.length && Array.isArray(o.money.tx)) money = o.money;
+    fixMoney();
     drafts = {};
     saveStore(); toast("Zaxiradan tiklandi"); renderAll();
   }
-  function renderZaxira() {
-    var root = document.getElementById("v-zaxira");
+  function renderFooter() {
+    var root = document.getElementById("v-footer");
     var fileIn = el("input", { type: "file", id: "import-file", accept: ".json,application/json", hidden: true,
       onchange: function (e) { if (e.target.files[0]) readImport(e.target.files[0]); e.target.value = ""; } });
-    var confirmCard = pendingImport ? el("div", { class: "card" },
+    var confirmCard = pendingImport ? el("div", { class: "card", id: "import-confirm" },
       el("h2", { text: "Zaxirani tiklash" }),
-      el("p", { class: "muted", text: "Faylda " + Object.keys(pendingImport.days).length + " kunlik reja va " + (Array.isArray(pendingImport.notes) ? pendingImport.notes.length : 0) + " ta yozuv bor. Hozirgi ma'lumotlar shu bilan almashtiriladi." }),
+      el("p", { class: "muted", text: "Faylda " + Object.keys(pendingImport.days).length + " kunlik reja va " + (pendingImport.money && Array.isArray(pendingImport.money.tx) ? pendingImport.money.tx.length : 0) + " ta pul yozuvi bor. Hozirgi ma'lumotlar shu bilan almashtiriladi."}),
       el("div", { class: "btnrow" },
         el("button", { class: "btn danger", text: "Ha, almashtir", onclick: applyImport }),
-        el("button", { class: "btn ghost", text: "Bekor", onclick: function () { pendingImport = null; renderAll(); } }))) : null;
+        el("button", { class: "btn ghost", text: "Bekor", onclick: function () { pendingImport = null; renderFooter(); } }))) : null;
     root.replaceChildren(el("div", { class: "wrap" },
-      el("div", { class: "card" },
-        el("h2", { text: "Ma'lumotlar qayerda saqlanadi" }),
-        el("p", { class: "muted", text: "Hamma narsa shu telefonning o'zida saqlanadi, internet va Claude kerak emas. Ilovani o'chirsangiz yoki brauzer ma'lumotlarini tozalasangiz, yo'qoladi. Telefonni almashtirishdan oldin zaxira faylini oling." })),
       confirmCard,
       el("div", { class: "card" },
         el("h2", { text: "Zaxira nusxa" }),
-        el("p", { class: "muted", text: "\"Ulashish\" tugmasi telefonning ulashish oynasini ochadi, u yerdan Google Drive'ni tanlasangiz, zaxira My Drive'ga tushadi." }),
+        el("p", { class: "muted small", text: "Hamma reja va pul yozuvlari faqat shu telefonda saqlanadi. Brauzer ma'lumotlarini tozalasangiz yoki ilovani o'chirsangiz yo'qoladi. Telefonni almashtirishdan oldin va vaqti-vaqti bilan zaxira oling." }),
+        el("div", { class: "small " + (config.lastBackup ? "muted" : "neg"), text: config.lastBackup ? "Oxirgi zaxira: " + fmtLong(parseKey(config.lastBackup)) + ", " + parseKey(config.lastBackup).getFullYear() : "Hali zaxira olinmagan." }),
         el("div", { class: "btnrow" },
-          el("button", { class: "btn", text: "Ulashish (Drive, Telegram...)", onclick: shareBackup }),
-          el("button", { class: "btn ghost", text: "Faylni yuklab olish", onclick: function () { saveFile("intizom-daftari-" + todayKey() + ".json", backupJson(), "application/json"); } }),
-          el("button", { class: "btn ghost", text: "Bloknot matni (.md)", onclick: function () { saveFile("kundalik-" + todayKey() + ".md", exportMd(), "text/markdown"); } })),
-        el("div", { class: "btnrow" },
-          el("button", { class: "btn ghost", text: "Zaxiradan tiklash", onclick: function () { fileIn.click(); } }), fileIn))));
+          el("button", { class: "btn", text: "Ma'lumotlarni yuklab olish (Backup)", onclick: function () { saveFile("intizom-daftari-" + todayKey() + ".json", backupJson(), "application/json"); } }),
+          el("button", { class: "btn ghost", text: "Ulashish (Drive, Telegram...)", onclick: shareBackup }),
+          el("button", { class: "btn ghost", text: "Tiklash (Restore)", onclick: function () { fileIn.click(); } }), fileIn))));
+  }
+
+  /* ===== ESLATMALAR ===== */
+  var firedKey = "intizom-fired-v1", fired = {}, actx = null;
+  function loadFired() { try { var o = JSON.parse(localStorage.getItem(firedKey) || "{}"); fired = (o.d === todayKey() && o.k) ? o.k : {}; } catch (e) { fired = {}; } }
+  function saveFired() { try { localStorage.setItem(firedKey, JSON.stringify({ d: todayKey(), k: fired })); } catch (e) {} }
+  function unlockAudio() {
+    try {
+      if (!actx) { var AC = window.AudioContext || window.webkitAudioContext; if (AC) actx = new AC(); }
+      if (actx && actx.state === "suspended") actx.resume();
+    } catch (e) {}
+  }
+  function beep() {
+    unlockAudio(); if (!actx) return;
+    try {
+      var t0 = actx.currentTime;
+      [0, 0.28, 0.56].forEach(function (o, i) {
+        var osc = actx.createOscillator(), g = actx.createGain();
+        osc.type = "sine"; osc.frequency.value = i === 2 ? 1040 : 880;
+        g.gain.setValueAtTime(0.0001, t0 + o);
+        g.gain.exponentialRampToValueAtTime(0.3, t0 + o + 0.03);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + o + 0.24);
+        osc.connect(g); g.connect(actx.destination); osc.start(t0 + o); osc.stop(t0 + o + 0.26);
+      });
+    } catch (e) {}
+  }
+  function showSystemNote(title, body, tag) {
+    if (!("Notification" in window) || Notification.permission !== "granted") return;
+    var opts = { body: body, tag: tag, icon: "icon-192.png", badge: "icon-192.png", renotify: true };
+    function fallback() { try { new Notification(title, opts); } catch (e) {} }
+    if (navigator.serviceWorker && navigator.serviceWorker.getRegistration) {
+      navigator.serviceWorker.getRegistration().then(function (reg) { if (reg && reg.showNotification) reg.showNotification(title, opts).catch(fallback); else fallback(); }).catch(fallback);
+    } else fallback();
+  }
+  function notify(title, body, tag) {
+    toast(title + ": " + body, false, 12000);
+    beep();
+    try { if (navigator.vibrate) navigator.vibrate([200, 100, 200]); } catch (e) {}
+    showSystemNote(title, body, tag);
+  }
+  function checkReminders() {
+    if (!config.remind) return;
+    var now = new Date(), tk = todayKey(), nowM = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+    var d = days[tk] || newDay(tk), changed = false;
+    d.tasks.forEach(function (t) {
+      if (t.done) return;
+      var m = toMin(t.time); if (m === null) return;
+      var id = tk + "|" + t.time + "|" + String(t.text).slice(0, 30), diff = m - nowM;
+      var label = t.time + (toMin(t.end) !== null ? " – " + t.end : "") + " · " + t.text;
+      if (diff <= 0 && diff > -3) {
+        if (!fired[id + "|go"]) { fired[id + "|go"] = 1; fired[id + "|pre"] = 1; changed = true; notify("Hozir boshlanadi", label, id + "|go"); }
+      } else if (diff > 0 && diff <= 5) {
+        if (!fired[id + "|pre"]) { fired[id + "|pre"] = 1; changed = true; notify(Math.ceil(diff) + " daqiqadan keyin", label, id + "|pre"); }
+      }
+    });
+    if (changed) saveFired();
+  }
+  function updateBell() {
+    var b = document.getElementById("bell");
+    b.setAttribute("aria-pressed", config.remind ? "true" : "false");
+    b.textContent = (config.remind ? "🔔" : "🔕") + " Eslatma";
+    b.setAttribute("aria-label", config.remind ? "Eslatmalar yoqilgan, o'chirish" : "Eslatmalar o'chiq, yoqish");
+  }
+  function toggleReminders() {
+    unlockAudio();
+    if (config.remind) { config.remind = false; saveStore(); updateBell(); toast("Eslatmalar o'chirildi"); return; }
+    config.remind = true; saveStore(); updateBell(); beep();
+    var okMsg = "Eslatma yoqildi: vazifadan 5 daqiqa oldin va boshlanganda xabar va ovoz keladi. Ilova ochiq yoki fonda bo'lishi kerak.";
+    if (!("Notification" in window)) toast("Bu brauzer bildirishnomani qo'llamaydi. Ilova ochiq paytida ovoz va xabar chiqadi.", false, 7000);
+    else if (Notification.permission === "default") {
+      Notification.requestPermission().then(function (p) {
+        toast(p === "granted" ? okMsg : "Bildirishnoma ruxsati berilmadi. Ilova ochiq paytida ovoz va xabar chiqadi.", p !== "granted", 8000);
+      }).catch(function () {});
+    } else if (Notification.permission === "denied") toast("Bildirishnoma brauzer sozlamasida bloklangan. Ilova ochiq paytida ovoz va xabar chiqadi.", true, 8000);
+    else toast(okMsg, false, 8000);
+    checkReminders();
   }
 
   /* ===== render ===== */
@@ -846,8 +991,8 @@ select.input { appearance: auto; }
     if (view === "bugun") renderBugun();
     else if (view === "hafta") renderHafta();
     else if (view === "intizom") renderIntizom();
-    else if (view === "pul") renderPul();
     else renderPul();
+    renderFooter(); updateBell(); fitAll();
   }
 
   /* ===== init ===== */
@@ -856,11 +1001,18 @@ select.input { appearance: auto; }
     if (TABS.some(function (t) { return t[0] === h; })) view = h;
     loadStore();
     try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
-    document.getElementById("sync").textContent = "telefonda saqlanadi";
+    loadFired();
+    document.getElementById("bell").addEventListener("click", toggleReminders);
+    document.addEventListener("pointerdown", unlockAudio, { once: true });
+    window.addEventListener("resize", fitAll);
     renderAll(); setBanner();
     document.addEventListener("visibilitychange", function () {
-      if (!document.hidden && lastToday !== todayKey()) { lastToday = todayKey(); sel = todayKey(); drafts = {}; renderAll(); }
+      if (!document.hidden) {
+        if (lastToday !== todayKey()) { lastToday = todayKey(); sel = todayKey(); drafts = {}; loadFired(); renderAll(); }
+        checkReminders();
+      }
     });
+    setInterval(checkReminders, 15000); checkReminders();
     if ("serviceWorker" in navigator) { navigator.serviceWorker.register("sw.js").catch(function () {}); }
   }
   init();

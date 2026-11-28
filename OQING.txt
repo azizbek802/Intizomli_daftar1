@@ -40,3 +40,14 @@ Bu ilova Claude'siz, internetsiz ishlaydi. Ma'lumotlar telefonning o'zida saqlan
 7) Pul bo'limi
    - "Pul" tabidagi "Hisoblar" bo'limida hisoblar nomini o'zgartiring va boshlang'ich qoldiqni yozing.
    - Har kuni "Kirim" (topdim), "Chiqim" (sarfladim) yoki "O'tkazma" (kartadan naqdga) yozing.
+
+8. YANGILIKLAR (v3)
+- Har vazifada boshlanish, tugash vaqti va davomiylik (masalan 08:30 - 09:50 (80 daq)) ko'rinadi.
+- Uzun vazifa nomlari qirqilmaydi, bir necha qatorga tushadi.
+- Eslatma: yuqori o'ngdagi "Eslatma" tugmasini bosing, ruxsat bering. Vazifadan 5 daqiqa oldin va boshlanganda xabar va ovoz chiqadi.
+  Muhim: eslatma ilova ochiq yoki fonda turganda ishlaydi. Ilovani butunlay yopib qo'ysangiz, telefon o'zi eslatma yubora olmaydi.
+- Hafta bo'limida "Standart jadvalni tiklash": 7 kunlik tayyor jadval bir bosishda yuklanadi.
+- Pul bo'limida oylik va kunlik limit, turkumlar bo'yicha xarajat tahlili.
+- Sahifa pastida "Backup" (yuklab olish) va "Restore" (tiklash) tugmalari. Vaqti-vaqti bilan zaxira oling.
+
+YANGILASH: GitHub'dagi 7 ta faylni yangi fayllar bilan almashtiring (index.html, sw.js, manifest.json, ikonlar, OQING.txt). Keyin ilovani oching, 1-2 marta yangilang. Ma'lumotlaringiz saqlanib qoladi.

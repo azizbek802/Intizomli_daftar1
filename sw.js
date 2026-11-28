@@ -1,4 +1,4 @@
-var CACHE = "intizom-v4";
+var CACHE = "intizom-v5";
 var FILES = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png"];
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(FILES); }).then(function () { return self.skipWaiting(); }));
@@ -16,4 +16,12 @@ self.addEventListener("fetch", function (e) {
     caches.open(CACHE).then(function (c) { c.put(e.request, copy); });
     return r;
   }).catch(function () { return caches.match(e.request).then(function (r) { return r || caches.match("./index.html"); }); }));
+});
+
+self.addEventListener("notificationclick", function (e) {
+  e.notification.close();
+  e.waitUntil(self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(function (list) {
+    for (var i = 0; i < list.length; i++) { if ("focus" in list[i]) return list[i].focus(); }
+    return self.clients.openWindow("./index.html");
+  }));
 });
